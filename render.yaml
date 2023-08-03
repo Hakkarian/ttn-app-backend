@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+  ttn_app:
+    container_name: ttn_app
+    build: .
+    image: hakkarian/ttn_live_app
+    ports:
+      - "3000:3000"
+    environment:
+      - PG_USER=hakkarian
+      - PG_PASSWORD=1234
+      - PG_HOST=ttn_db
+      - PG_DB=ttn_live_db
+    volumes:
+      - .:/app
+    depends_on:
+      - ttn_db
+    restart: always
+
+  ttn_db:
+    container_name: ttn_db
+    image: postgres:12.3
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=ttn_live_db
+      - POSTGRES_USER=hakkarian
+    volumes:
+      - ttn_db_data:/var/lib/postgresql/data
+
+volumes:
+  ttn_db_data: {}
