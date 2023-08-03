@@ -31,4 +31,4 @@ services:
       - ttn_db_data:/var/lib/postgresql/data
 
 volumes:
-  ttn_db_data: {}
+  ttn_db_data: 
