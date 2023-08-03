@@ -1,34 +1,42 @@
 version: "3.9"
 
 services:
-  ttn_app:
-    container_name: ttn_app
-    build: .
-    image: hakkarian/ttn_live_app
+  - name: ttn-app
+    dockerfile: Dockerfile
+    env:
+      - key: PG_USER
+        value: hakkarian
+      - key: PG_PASSWORD
+        value: 1234
+      - key: PG_HOST
+        value: ttn_db
+      - key: PG_DB
+        value: ttn_live_db
+    envFromSecret:
+      - secretName: ttn-app-secrets
     ports:
-      - "3000:3000"
-    environment:
-      - PG_USER=hakkarian
-      - PG_PASSWORD=1234
-      - PG_HOST=ttn_db
-      - PG_DB=ttn_live_db
+      - port: 3000
+        servicePort: 3000
     volumes:
-      - .:/app
-    depends_on:
-      - ttn_db
-    restart: always
+      - name: ttn-app-volume
+        mountPath: /app
 
-  ttn_db:
-    container_name: ttn_db
-    image: postgres:12.3
+  - name: ttn-db
+    dockerfile: Dockerfile
+    env:
+      - key: POSTGRES_PASSWORD
+        value: 1234
+      - key: POSTGRES_DB
+        value: ttn_live_db
+      - key: POSTGRES_USER
+        value: hakkarian
     ports:
-      - "5432:5432"
-    environment:
-      - POSTGRES_PASSWORD=1234
-      - POSTGRES_DB=ttn_live_db
-      - POSTGRES_USER=hakkarian
+      - port: 5432
+        servicePort: 5432
     volumes:
-      - ttn_db_data:/var/lib/postgresql/data
+      - name: ttn-db-data
+        mountPath: /var/lib/postgresql/data
 
 volumes:
-  ttn_db_data: {}
+  - name: ttn-app-volume
+  - name: ttn-db-data
