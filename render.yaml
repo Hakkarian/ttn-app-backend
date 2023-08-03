@@ -1,16 +1,3 @@
-app:
-  name: ttn_live_app
-  build:
-    dockerfile: Dockerfile
-    context: .
-  services:
-    - ttn_db
-  environment:
-    PG_USER: hakkarian
-    PG_PASSWORD: 1234
-    PG_HOST: ttn_db
-    PG_DB: ttn_live_db
-
 services:
   ttn_db:
     name: ttn_db
